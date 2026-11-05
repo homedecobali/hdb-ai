@@ -19,7 +19,7 @@ body.embed .app{max-width:none;border:0}
 .bar{background:var(--hdb-espresso);color:var(--hdb-footer-text);padding:8px 14px;display:flex;align-items:center;gap:10px;font-size:13px}
 .bar img{height:24px;width:auto}
 .bar .lang{margin-left:auto;display:flex;gap:2px}
-.bar .lang button{background:none;border:1px solid transparent;color:var(--hdb-footer-text);font:inherit;font-size:12px;padding:2px 7px;border-radius:4px;cursor:pointer}
+.bar .lang button{background:none;border:1px solid transparent;color:var(--hdb-footer-text);font:inherit;font-size:12px;padding:3px 5px;border-radius:4px;cursor:pointer;line-height:0;opacity:.6}.bar .lang button svg{display:block;border-radius:2px}.bar .lang button[aria-pressed=true]{opacity:1}
 .bar .lang button[aria-pressed=true]{border-color:var(--hdb-copper);color:var(--hdb-white)}
 .bar .x{background:none;border:0;color:var(--hdb-footer-text);font-size:22px;line-height:1;cursor:pointer;padding:0 2px;display:none}
 body.embed .bar .x{display:block}
@@ -80,7 +80,7 @@ footer a{color:var(--hdb-copper)}
   <div class="bar">
     <img src="https://res.cloudinary.com/dkujwmni2/image/upload/w_200,f_png/4348_wit_nxkzbp.png" alt="HomeDecoBali">
     <div class="lang" role="group" aria-label="Idioma">
-      <button data-l="es">ES</button><button data-l="pt">PT</button><button data-l="en">EN</button>
+      <button data-l="es" title="Español" aria-label="Español"><svg viewBox="0 0 30 20" width="24" height="16" aria-hidden="true"><rect width="30" height="20" fill="#AA151B"/><rect y="5" width="30" height="10" fill="#F1BF00"/></svg></button><button data-l="pt" title="Português" aria-label="Português"><svg viewBox="0 0 30 20" width="24" height="16" aria-hidden="true"><rect width="30" height="20" fill="#FF0000"/><rect width="12" height="20" fill="#006600"/><circle cx="12" cy="10" r="4" fill="#FFCC00"/><circle cx="12" cy="10" r="2.6" fill="#FF0000"/><circle cx="12" cy="10" r="1.8" fill="#fff"/></svg></button><button data-l="en" title="English" aria-label="English"><svg viewBox="0 0 60 40" width="24" height="16" aria-hidden="true"><clipPath id="uk"><rect width="60" height="40"/></clipPath><g clip-path="url(#uk)"><rect width="60" height="40" fill="#012169"/><path d="M0,0 60,40M60,0 0,40" stroke="#fff" stroke-width="8"/><path d="M0,0 60,40M60,0 0,40" stroke="#C8102E" stroke-width="3"/><path d="M30,0v40M0,20h60" stroke="#fff" stroke-width="12"/><path d="M30,0v40M0,20h60" stroke="#C8102E" stroke-width="7"/></g></svg></button>
     </div>
     <button class="x" aria-label="Cerrar" onclick="parent.postMessage({hdbAi:'close'},'*')">×</button>
   </div>
@@ -127,8 +127,7 @@ footer a{color:var(--hdb-copper)}
   };
   var P = new URLSearchParams(location.search);
   if (P.get('embed')==='1') document.body.classList.add('embed');
-  var nav = (navigator.language||'es').slice(0,2);
-  var lang = ['es','pt','en'].indexOf(P.get('lang'))>=0 ? P.get('lang') : (['es','pt','en'].indexOf(nav)>=0 ? nav : 'es');
+  var lang = ['es','pt','en'].indexOf(P.get('lang'))>=0 ? P.get('lang') : 'es';
   var order = (P.get('order')||'').replace(/[^#A-Za-z0-9-]/g,'').slice(0,20);
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   function sget(k){try{return sessionStorage.getItem(k)}catch(e){return null}}
