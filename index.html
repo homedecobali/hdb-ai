@@ -3,31 +3,65 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>HomeDecoBali · Asistente</title>
+<title>Dewi · HomeDecoBali</title>
 <meta name="robots" content="noindex">
+<link rel="icon" href="assets/dewi.jpg">
 <style>
-:root{--hdb-sand:#EFE6D6;--hdb-cream:#FAF6EF;--hdb-border:#E2D6C2;--hdb-soft:#F3EBDD;--hdb-brand:#7A5230;--hdb-copper:#A4763F;--hdb-espresso:#3B2F24;--hdb-text:#5C5245;--hdb-footer-text:#D8CBB4;--hdb-white:#FFFFFF;--hdb-font:Georgia,"Times New Roman",serif}
+:root{--hdb-sand:#EFE6D6;--hdb-cream:#FAF6EF;--hdb-border:#E2D6C2;--hdb-soft:#F3EBDD;--hdb-brand:#7A5230;--hdb-copper:#A4763F;--hdb-espresso:#3B2F24;--hdb-text:#5C5245;--hdb-footer-text:#D8CBB4;--hdb-white:#FFFFFF;--hdb-font:Georgia,"Times New Roman",serif;--av:150px}
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
 body{background:var(--hdb-sand);color:var(--hdb-text);font-family:var(--hdb-font);display:flex;justify-content:center}
-.app{width:100%;max-width:720px;height:100%;display:flex;flex-direction:column;background:var(--hdb-cream);border-left:1px solid var(--hdb-border);border-right:1px solid var(--hdb-border)}
+.app{width:100%;max-width:720px;height:100%;display:flex;flex-direction:column;background:var(--hdb-cream);border-left:1px solid var(--hdb-border);border-right:1px solid var(--hdb-border);position:relative}
+body.embed{--av:96px}
 body.embed .app{max-width:none;border:0}
-header{background:var(--hdb-espresso);color:var(--hdb-footer-text);padding:12px 16px;display:flex;align-items:center;gap:12px}
-header img{height:34px;width:auto}
-header .t{font-size:14px;line-height:1.3}
-header .t b{display:block;color:var(--hdb-white);font-weight:normal;font-size:16px}
-header .lang{margin-left:auto;display:flex;gap:4px}
-header .lang button{background:none;border:1px solid transparent;color:var(--hdb-footer-text);font:inherit;font-size:13px;padding:3px 7px;border-radius:4px;cursor:pointer}
-header .lang button[aria-pressed=true]{border-color:var(--hdb-copper);color:var(--hdb-white)}
-header .x{background:none;border:0;color:var(--hdb-footer-text);font-size:22px;cursor:pointer;padding:0 4px;display:none}
-body.embed header .x{display:block}
-#log{flex:1;overflow-y:auto;padding:18px 16px;display:flex;flex-direction:column;gap:12px}
-.msg{max-width:86%;padding:10px 14px;border-radius:12px;line-height:1.5;font-size:15px;white-space:pre-wrap;word-wrap:break-word}
-.msg.a{background:var(--hdb-white);border:1px solid var(--hdb-border);align-self:flex-start;border-bottom-left-radius:4px}
-.msg.u{background:var(--hdb-brand);color:var(--hdb-white);align-self:flex-end;border-bottom-right-radius:4px}
+
+/* top bar */
+.bar{background:var(--hdb-espresso);color:var(--hdb-footer-text);padding:8px 14px;display:flex;align-items:center;gap:10px;font-size:13px}
+.bar img{height:24px;width:auto}
+.bar .lang{margin-left:auto;display:flex;gap:2px}
+.bar .lang button{background:none;border:1px solid transparent;color:var(--hdb-footer-text);font:inherit;font-size:12px;padding:2px 7px;border-radius:4px;cursor:pointer}
+.bar .lang button[aria-pressed=true]{border-color:var(--hdb-copper);color:var(--hdb-white)}
+.bar .x{background:none;border:0;color:var(--hdb-footer-text);font-size:22px;line-height:1;cursor:pointer;padding:0 2px;display:none}
+body.embed .bar .x{display:block}
+
+/* Dewi */
+.hero{display:flex;align-items:center;gap:16px;padding:18px 18px 10px;background:linear-gradient(var(--hdb-soft),var(--hdb-cream))}
+.dewi{position:relative;width:var(--av);height:var(--av);flex:0 0 auto;border-radius:50%;border:3px solid var(--hdb-copper);box-shadow:0 6px 18px rgba(59,47,36,.22);overflow:hidden;background:#bfe6ee}
+.dewi img{width:100%;height:100%;display:block}
+.dewi.bounce{animation:bounce 1.3s cubic-bezier(.3,.7,.4,1) 1}
+.dewi.talking .head{animation:nod 1.6s ease-in-out infinite}
+.head{position:absolute;inset:0;transform-origin:50% 80%}
+@keyframes bounce{0%{transform:translateY(-38px)}22%{transform:translateY(0)}38%{transform:translateY(-16px)}54%{transform:translateY(0)}68%{transform:translateY(-6px)}82%,100%{transform:translateY(0)}}
+@keyframes nod{0%,100%{transform:rotate(0) translateY(0)}30%{transform:rotate(-1.2deg) translateY(-1px)}70%{transform:rotate(1deg) translateY(0)}}
+/* mond: ligt over de getekende lippen, opent per klank */
+.mouth{position:absolute;left:48.3%;top:68.2%;width:11.5%;height:calc(var(--av) * .055 * var(--m,0));min-height:0;transform:translate(-50%,-50%);border-radius:50% 50% 46% 46%/40% 40% 60% 60%;background:radial-gradient(ellipse at 50% 30%,#5a1f22 0 55%,#3a0f14 56%);box-shadow:0 0 0 calc(var(--av)*.012) #d27866, 0 calc(var(--av)*.008) 0 calc(var(--av)*.014) #ef9f86;opacity:calc(var(--m,0) * 6);transition:height 70ms linear,opacity 70ms linear}
+.mouth::before{content:"";position:absolute;left:18%;right:18%;top:0;height:28%;background:#fbf3ea;border-radius:0 0 40% 40%}
+.blink{position:absolute;top:43.4%;width:12.5%;height:0;background:#e8a37c;border-radius:0 0 50% 50%;animation:blink 5.5s infinite}
+.blink.l{left:31.5%}.blink.r{left:53.5%}
+@keyframes blink{0%,95.5%,100%{height:0}97.2%{height:5.5%}}
+
+.bubble{position:relative;flex:1;background:var(--hdb-white);border:1px solid var(--hdb-border);border-radius:14px;padding:12px 15px;font-size:15px;line-height:1.5;min-height:calc(var(--av) * .55);box-shadow:0 2px 8px rgba(59,47,36,.06)}
+.bubble::before{content:"";position:absolute;left:-9px;top:50%;width:16px;height:16px;background:var(--hdb-white);border-left:1px solid var(--hdb-border);border-bottom:1px solid var(--hdb-border);transform:translateY(-50%) rotate(45deg)}
+.bubble .name{display:block;color:var(--hdb-brand);font-size:13px;letter-spacing:.04em;margin-bottom:2px}
+.caret{display:inline-block;width:2px;height:1em;background:var(--hdb-copper);vertical-align:-2px;margin-left:1px;animation:caret .8s steps(1) infinite}
+@keyframes caret{50%{opacity:0}}
+body.embed .hero{padding:12px 12px 8px;gap:12px}
+body.embed .bubble{font-size:14px;padding:9px 12px}
+
+/* chat */
+#log{flex:1;overflow-y:auto;padding:8px 16px 16px;display:flex;flex-direction:column;gap:12px}
+.row{display:flex;gap:8px;align-items:flex-end}
+.row.u{justify-content:flex-end}
+.row .mini{width:28px;height:28px;border-radius:50%;flex:0 0 auto;border:1px solid var(--hdb-copper);background:#bfe6ee url(assets/dewi.jpg) center/cover}
+.msg{max-width:84%;padding:10px 14px;border-radius:12px;line-height:1.5;font-size:15px;white-space:pre-wrap;word-wrap:break-word}
+.row.a .msg{background:var(--hdb-white);border:1px solid var(--hdb-border);border-bottom-left-radius:4px}
+.row.u .msg{background:var(--hdb-brand);color:var(--hdb-white);border-bottom-right-radius:4px}
 .msg a{color:var(--hdb-copper)}
-.msg.u a{color:var(--hdb-white)}
-.typing{align-self:flex-start;color:var(--hdb-copper);font-style:italic;font-size:14px}
+.row.u .msg a{color:var(--hdb-white)}
+.dots{display:inline-flex;gap:4px;padding:4px 2px}
+.dots i{width:7px;height:7px;border-radius:50%;background:var(--hdb-copper);opacity:.35;animation:dot 1.1s infinite}
+.dots i:nth-child(2){animation-delay:.18s}.dots i:nth-child(3){animation-delay:.36s}
+@keyframes dot{40%{opacity:1;transform:translateY(-3px)}}
 .chips{display:flex;flex-wrap:wrap;gap:8px;padding:0 16px 10px}
 .chips button{background:var(--hdb-soft);border:1px solid var(--hdb-border);color:var(--hdb-brand);font:inherit;font-size:14px;padding:6px 12px;border-radius:16px;cursor:pointer}
 .chips button:hover{border-color:var(--hdb-copper)}
@@ -38,18 +72,28 @@ form button{background:var(--hdb-copper);color:var(--hdb-white);border:0;border-
 form button:disabled{opacity:.5;cursor:default}
 footer{font-size:11px;color:var(--hdb-text);text-align:center;padding:0 16px 10px;opacity:.8}
 footer a{color:var(--hdb-copper)}
+@media (prefers-reduced-motion:reduce){.dewi.bounce,.dewi.talking .head,.blink,.caret{animation:none}}
 </style>
 </head>
 <body>
 <div class="app">
-  <header>
-    <img src="https://res.cloudinary.com/dkujwmni2/image/upload/w_220,f_png/4349_wit_rnt5kk.png" alt="HomeDecoBali">
-    <div class="t"><b data-i="title"></b><span data-i="sub"></span></div>
+  <div class="bar">
+    <img src="https://res.cloudinary.com/dkujwmni2/image/upload/w_200,f_png/4348_wit_nxkzbp.png" alt="HomeDecoBali">
     <div class="lang" role="group" aria-label="Idioma">
       <button data-l="es">ES</button><button data-l="pt">PT</button><button data-l="en">EN</button>
     </div>
     <button class="x" aria-label="Cerrar" onclick="parent.postMessage({hdbAi:'close'},'*')">×</button>
-  </header>
+  </div>
+  <div class="hero">
+    <div class="dewi bounce" id="dewi" aria-hidden="true">
+      <div class="head">
+        <img src="assets/dewi.jpg" alt="">
+        <span class="blink l"></span><span class="blink r"></span>
+        <span class="mouth" id="mouth"></span>
+      </div>
+    </div>
+    <div class="bubble" aria-live="polite"><span class="name">DEWI · HomeDecoBali</span><span id="intro"></span><span class="caret" id="caret"></span></div>
+  </div>
   <div id="log" aria-live="polite"></div>
   <div class="chips" id="chips"></div>
   <form id="f">
@@ -62,36 +106,38 @@ footer a{color:var(--hdb-copper)}
 (function(){
   var ENDPOINT = 'https://jucubuoftjehwancegma.supabase.co/functions/v1/hdb-ai';
   var T = {
-    es:{title:'Asistente HomeDecoBali',sub:'Pedidos, productos y envíos',send:'Enviar',ph:'Escribe tu pregunta…',typing:'Escribiendo…',
-      hello:'¡Hola! Soy el asistente de HomeDecoBali. Te ayudo con tu pedido, con nuestros productos hechos a mano en Bali y con envíos o devoluciones. ¿En qué te ayudo?',
-      helloOrder:'¡Hola! Veo que vienes por tu pedido {o}. Para mostrarte su estado, dime el email del pedido o tu nombre y apellido.',
+    es:{send:'Enviar',ph:'Escribe tu pregunta a Dewi…',
+      hello:'¡Hola! Soy Dewi, del equipo de HomeDecoBali. Estoy aquí para ayudarte con tu pedido, con nuestras piezas hechas a mano en Bali y con envíos o devoluciones. ¿En qué te ayudo?',
+      helloOrder:'¡Hola! Soy Dewi, del equipo de HomeDecoBali. Vienes por tu pedido {o}, ¿verdad? Dime el email del pedido o tu nombre y apellido y te cuento cómo va.',
       chips:['¿Dónde está mi pedido?','¿Cuándo llegan las reservas?','Busco una lámpara colgante','Envíos y devoluciones'],
       err:'No hay conexión. Inténtalo de nuevo o escríbenos a support@homedecobali.com.',
-      foot:'Asistente automático. Para cambios o devoluciones: <a href="mailto:support@homedecobali.com">support@homedecobali.com</a> · <a href="https://homedecobali.es/policies/privacy-policy" target="_blank" rel="noopener">Privacidad</a>'},
-    pt:{title:'Assistente HomeDecoBali',sub:'Encomendas, produtos e envios',send:'Enviar',ph:'Escreve a tua pergunta…',typing:'A escrever…',
-      hello:'Olá! Sou o assistente da HomeDecoBali. Ajudo-te com a tua encomenda, com os nossos produtos feitos à mão em Bali e com envios ou devoluções. Em que posso ajudar?',
-      helloOrder:'Olá! Vens pela tua encomenda {o}. Para te mostrar o estado, diz-me o email da encomenda ou o teu nome e apelido.',
+      foot:'Dewi es nuestra asistente digital. Para cambios o devoluciones: <a href="mailto:support@homedecobali.com">support@homedecobali.com</a> · <a href="https://homedecobali.es/policies/privacy-policy" target="_blank" rel="noopener">Privacidad</a>'},
+    pt:{send:'Enviar',ph:'Escreve a tua pergunta à Dewi…',
+      hello:'Olá! Sou a Dewi, da equipa HomeDecoBali. Estou aqui para te ajudar com a tua encomenda, com as nossas peças feitas à mão em Bali e com envios ou devoluções. Em que posso ajudar?',
+      helloOrder:'Olá! Sou a Dewi, da equipa HomeDecoBali. Vens pela tua encomenda {o}, certo? Diz-me o email da encomenda ou o teu nome e apelido e conto-te como está.',
       chips:['Onde está a minha encomenda?','Quando chegam as reservas?','Procuro um candeeiro suspenso','Envios e devoluções'],
       err:'Sem ligação. Tenta novamente ou escreve-nos para support@homedecobali.com.',
-      foot:'Assistente automático. Para alterações ou devoluções: <a href="mailto:support@homedecobali.com">support@homedecobali.com</a> · <a href="https://homedecobali.es/policies/privacy-policy" target="_blank" rel="noopener">Privacidade</a>'},
-    en:{title:'HomeDecoBali Assistant',sub:'Orders, products and shipping',send:'Send',ph:'Type your question…',typing:'Typing…',
-      hello:"Hi! I'm the HomeDecoBali assistant. I can help with your order, our handmade Bali products, and shipping or returns. How can I help?",
-      helloOrder:"Hi! You're here about order {o}. To show its status, tell me the order email or your first and last name.",
+      foot:'A Dewi é a nossa assistente digital. Para alterações ou devoluções: <a href="mailto:support@homedecobali.com">support@homedecobali.com</a> · <a href="https://homedecobali.es/policies/privacy-policy" target="_blank" rel="noopener">Privacidade</a>'},
+    en:{send:'Send',ph:'Ask Dewi a question…',
+      hello:"Hi! I'm Dewi, from the HomeDecoBali team. I'm here to help with your order, our handmade pieces from Bali, and shipping or returns. How can I help?",
+      helloOrder:"Hi! I'm Dewi, from the HomeDecoBali team. You're here about order {o}, right? Tell me the order email or your first and last name and I'll check it for you.",
       chips:['Where is my order?','When do preorders arrive?',"I'm looking for a pendant lamp",'Shipping & returns'],
       err:'No connection. Please try again or email support@homedecobali.com.',
-      foot:'Automated assistant. For changes or returns: <a href="mailto:support@homedecobali.com">support@homedecobali.com</a> · <a href="https://homedecobali.es/policies/privacy-policy" target="_blank" rel="noopener">Privacy</a>'}
+      foot:'Dewi is our digital assistant. For changes or returns: <a href="mailto:support@homedecobali.com">support@homedecobali.com</a> · <a href="https://homedecobali.es/policies/privacy-policy" target="_blank" rel="noopener">Privacy</a>'}
   };
   var P = new URLSearchParams(location.search);
   if (P.get('embed')==='1') document.body.classList.add('embed');
   var nav = (navigator.language||'es').slice(0,2);
   var lang = ['es','pt','en'].indexOf(P.get('lang'))>=0 ? P.get('lang') : (['es','pt','en'].indexOf(nav)>=0 ? nav : 'es');
   var order = (P.get('order')||'').replace(/[^#A-Za-z0-9-]/g,'').slice(0,20);
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   function sget(k){try{return sessionStorage.getItem(k)}catch(e){return null}}
   function sset(k,v){try{sessionStorage.setItem(k,v)}catch(e){}}
   var sid = sget('hdbai_sid') || (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())+Math.random().toString(16).slice(2));
   sset('hdbai_sid', sid);
   var history = []; try{ history = JSON.parse(sget('hdbai_hist')||'[]') }catch(e){ history=[] }
-  var log = document.getElementById('log'), q = document.getElementById('q'), send = document.getElementById('send'), chips = document.getElementById('chips');
+  var log=document.getElementById('log'), q=document.getElementById('q'), send=document.getElementById('send'), chips=document.getElementById('chips');
+  var dewi=document.getElementById('dewi'), mouth=document.getElementById('mouth'), intro=document.getElementById('intro'), caret=document.getElementById('caret');
 
   function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
   function md(s){
@@ -101,39 +147,90 @@ footer a{color:var(--hdb-copper)}
     s = s.replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>');
     return s;
   }
-  function add(role, text){
-    var d = document.createElement('div'); d.className = 'msg '+(role==='user'?'u':'a');
-    d.innerHTML = md(text); log.appendChild(d); log.scrollTop = log.scrollHeight;
+
+  // ---- mond: opening per letter (klinker = open, medeklinker = half, spatie/leesteken = dicht)
+  function mouthFor(ch){
+    if (/[aáàâ]/i.test(ch)) return 1;
+    if (/[oóòôeéèêuúü]/i.test(ch)) return .75;
+    if (/[iíy]/i.test(ch)) return .5;
+    if (/[mbp]/i.test(ch)) return 0;
+    if (/[a-zñç]/i.test(ch)) return .3;
+    return 0;
   }
-  function render(){
-    var t = T[lang]; document.documentElement.lang = lang==='pt'?'pt-PT':lang;
+  function setMouth(v){ mouth.style.setProperty('--m', v) }
+
+  // ---- typemachine: schrijft text (markdown) letter voor letter in el, Dewi praat mee
+  var talkQueue = Promise.resolve();
+  function speak(el, text, done){
+    talkQueue = talkQueue.then(function(){ return new Promise(function(res){
+      if (reduce){ el.innerHTML = md(text); done&&done(); return res(); }
+      var i = 0; dewi.classList.add('talking');
+      (function step(){
+        if (i >= text.length){ el.innerHTML = md(text); setMouth(0); dewi.classList.remove('talking'); done&&done(); return res(); }
+        var ch = text[i++];
+        el.innerHTML = md(text.slice(0,i));
+        if (el.closest('#log')) log.scrollTop = log.scrollHeight;
+        setMouth(mouthFor(ch));
+        var d = /[.!?¿¡]/.test(ch) ? 260 : /[,;:]/.test(ch) ? 140 : ch===' ' ? 35 : 24;
+        if (text.length > 400) d = Math.max(8, d/2); // lange antwoorden sneller
+        setTimeout(step, d);
+      })();
+    })});
+  }
+
+  function addUser(text){
+    var r=document.createElement('div'); r.className='row u';
+    var m=document.createElement('div'); m.className='msg'; m.innerHTML=md(text);
+    r.appendChild(m); log.appendChild(r); log.scrollTop=log.scrollHeight;
+  }
+  function addDewi(text, animate){
+    var r=document.createElement('div'); r.className='row a';
+    var av=document.createElement('span'); av.className='mini';
+    var m=document.createElement('div'); m.className='msg';
+    r.appendChild(av); r.appendChild(m); log.appendChild(r);
+    if (animate) speak(m, text); else m.innerHTML = md(text);
+    log.scrollTop=log.scrollHeight; return m;
+  }
+  function addDots(){
+    var r=document.createElement('div'); r.className='row a';
+    r.innerHTML='<span class="mini"></span><div class="msg"><span class="dots"><i></i><i></i><i></i></span></div>';
+    log.appendChild(r); log.scrollTop=log.scrollHeight; return r;
+  }
+
+  function render(first){
+    var t=T[lang]; document.documentElement.lang = lang==='pt'?'pt-PT':lang;
     document.querySelectorAll('[data-i]').forEach(function(el){ var k=el.getAttribute('data-i'); if(k==='foot') el.innerHTML=t[k]; else el.textContent=t[k]; });
     document.querySelectorAll('[data-l]').forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-l')===lang) });
-    q.placeholder = t.ph;
-    log.innerHTML = '';
-    add('assistant', order ? t.helloOrder.replace('{o}', order) : t.hello);
-    history.forEach(function(m){ add(m.role, m.content) });
-    chips.innerHTML = '';
-    if (!history.length && !order) t.chips.forEach(function(c){ var b=document.createElement('button'); b.type='button'; b.textContent=c; b.onclick=function(){ ask(c) }; chips.appendChild(b) });
+    q.placeholder=t.ph;
+    var hi = order ? t.helloOrder.replace('{o}', order) : t.hello;
+    log.innerHTML=''; chips.innerHTML='';
+    history.forEach(function(m){ m.role==='user' ? addUser(m.content) : addDewi(m.content,false) });
+    var showChips = function(){ caret.style.display='none'; if(!history.length && !order) t.chips.forEach(function(c){ var b=document.createElement('button'); b.type='button'; b.textContent=c; b.onclick=function(){ ask(c) }; chips.appendChild(b) }) };
+    caret.style.display='';
+    if (history.length && first){ intro.innerHTML=md(hi); showChips(); return; }
+    intro.textContent='';
+    // even wachten tot de stuiter-binnenkomst bijna klaar is
+    setTimeout(function(){ speak(intro, hi, showChips) }, first && !reduce ? 900 : 0);
   }
-  document.querySelectorAll('[data-l]').forEach(function(b){ b.onclick=function(){ lang=b.getAttribute('data-l'); render() } });
+  document.querySelectorAll('[data-l]').forEach(function(b){ b.onclick=function(){ if(lang===b.getAttribute('data-l')) return; lang=b.getAttribute('data-l'); render(false) } });
 
   function ask(text){
-    text = text.trim(); if(!text) return;
-    chips.innerHTML=''; add('user', text);
-    var outgoing = history.concat([{role:'user', content: (order && !history.length) ? ('[Pedido '+order+'] '+text) : text}]);
+    text=text.trim(); if(!text) return;
+    chips.innerHTML=''; addUser(text);
+    var outgoing = history.concat([{role:'user', content:(order && !history.length) ? ('[Pedido '+order+'] '+text) : text}]);
     history.push({role:'user', content:text});
-    send.disabled = true; q.value='';
-    var ty = document.createElement('div'); ty.className='typing'; ty.textContent=T[lang].typing; log.appendChild(ty); log.scrollTop=log.scrollHeight;
+    send.disabled=true; q.value='';
+    var dots=addDots();
     fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session_id:sid, lang:lang, messages:outgoing.slice(-16)})})
       .then(function(r){ return r.json() })
-      .then(function(j){ ty.remove(); var a = j.reply || T[lang].err; add('assistant', a); history.push({role:'assistant', content:a}); sset('hdbai_hist', JSON.stringify(history.slice(-16))) })
-      .catch(function(){ ty.remove(); add('assistant', T[lang].err); history.pop() })
+      .then(function(j){ dots.remove(); var a=j.reply||T[lang].err; addDewi(a,true); history.push({role:'assistant', content:a}); sset('hdbai_hist', JSON.stringify(history.slice(-16))) })
+      .catch(function(){ dots.remove(); addDewi(T[lang].err,true); history.pop() })
       .then(function(){ send.disabled=false; q.focus() });
   }
-  document.getElementById('f').onsubmit = function(e){ e.preventDefault(); ask(q.value) };
+  document.getElementById('f').onsubmit=function(e){ e.preventDefault(); ask(q.value) };
   q.addEventListener('keydown', function(e){ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); ask(q.value) } });
-  render();
+  dewi.addEventListener('animationend', function(e){ if(e.animationName==='bounce') dewi.classList.remove('bounce') });
+  render(true);
 })();
 </script>
 </body>
