@@ -31,7 +31,7 @@ Kan niet: wijzigen, annuleren, terugbetalen, adres aanpassen, kortingen. Verwijs
 | Naam | Waarde |
 | --- | --- |
 | `ANTHROPIC_API_KEY` | `sk-ant-...` |
-| `SHOPIFY_ADMIN_TOKEN` | `shpat_...` van een eigen custom app met `read_products`, `read_orders`, `read_all_orders`, `read_customers` + Protected customer data (naam, e-mail) |
+| `SHOPIFY_CLIENT_ID` + `SHOPIFY_CLIENT_SECRET` | Klant-ID + Klantgeheim van Dev Dashboard-app **HDB-ai** (zelfde organisatie als de winkel; client credentials grant, token 24u). Scopes: `read_products`, `read_orders`, `read_customers` (+ `read_all_orders`, `read_legal_policies` gepland) |
 | `SHOPIFY_STORE` | optioneel, default `c62tdp-kr.myshopify.com` |
 | `HDB_AI_MODEL` | optioneel, default `claude-sonnet-4-6` |
 
