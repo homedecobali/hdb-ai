@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HomeDecoBali · Asistente</title>
+<meta name="robots" content="noindex">
+<style>
+:root{--hdb-sand:#EFE6D6;--hdb-cream:#FAF6EF;--hdb-border:#E2D6C2;--hdb-soft:#F3EBDD;--hdb-brand:#7A5230;--hdb-copper:#A4763F;--hdb-espresso:#3B2F24;--hdb-text:#5C5245;--hdb-footer-text:#D8CBB4;--hdb-white:#FFFFFF;--hdb-font:Georgia,"Times New Roman",serif}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--hdb-sand);color:var(--hdb-text);font-family:var(--hdb-font);display:flex;justify-content:center}
+.app{width:100%;max-width:720px;height:100%;display:flex;flex-direction:column;background:var(--hdb-cream);border-left:1px solid var(--hdb-border);border-right:1px solid var(--hdb-border)}
+body.embed .app{max-width:none;border:0}
+header{background:var(--hdb-espresso);color:var(--hdb-footer-text);padding:12px 16px;display:flex;align-items:center;gap:12px}
+header img{height:34px;width:auto}
+header .t{font-size:14px;line-height:1.3}
+header .t b{display:block;color:var(--hdb-white);font-weight:normal;font-size:16px}
+header .lang{margin-left:auto;display:flex;gap:4px}
+header .lang button{background:none;border:1px solid transparent;color:var(--hdb-footer-text);font:inherit;font-size:13px;padding:3px 7px;border-radius:4px;cursor:pointer}
+header .lang button[aria-pressed=true]{border-color:var(--hdb-copper);color:var(--hdb-white)}
+header .x{background:none;border:0;color:var(--hdb-footer-text);font-size:22px;cursor:pointer;padding:0 4px;display:none}
+body.embed header .x{display:block}
+#log{flex:1;overflow-y:auto;padding:18px 16px;display:flex;flex-direction:column;gap:12px}
+.msg{max-width:86%;padding:10px 14px;border-radius:12px;line-height:1.5;font-size:15px;white-space:pre-wrap;word-wrap:break-word}
+.msg.a{background:var(--hdb-white);border:1px solid var(--hdb-border);align-self:flex-start;border-bottom-left-radius:4px}
+.msg.u{background:var(--hdb-brand);color:var(--hdb-white);align-self:flex-end;border-bottom-right-radius:4px}
+.msg a{color:var(--hdb-copper)}
+.msg.u a{color:var(--hdb-white)}
+.typing{align-self:flex-start;color:var(--hdb-copper);font-style:italic;font-size:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;padding:0 16px 10px}
+.chips button{background:var(--hdb-soft);border:1px solid var(--hdb-border);color:var(--hdb-brand);font:inherit;font-size:14px;padding:6px 12px;border-radius:16px;cursor:pointer}
+.chips button:hover{border-color:var(--hdb-copper)}
+form{display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--hdb-border);background:var(--hdb-cream)}
+textarea{flex:1;resize:none;border:1px solid var(--hdb-border);border-radius:8px;padding:10px 12px;font:inherit;font-size:15px;color:var(--hdb-espresso);background:var(--hdb-white);max-height:120px}
+textarea:focus{outline:2px solid var(--hdb-copper);outline-offset:-1px}
+form button{background:var(--hdb-copper);color:var(--hdb-white);border:0;border-radius:8px;padding:0 18px;font:inherit;font-size:15px;cursor:pointer}
+form button:disabled{opacity:.5;cursor:default}
+footer{font-size:11px;color:var(--hdb-text);text-align:center;padding:0 16px 10px;opacity:.8}
+footer a{color:var(--hdb-copper)}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <img src="https://res.cloudinary.com/dkujwmni2/image/upload/w_220,f_png/4349_wit_rnt5kk.png" alt="HomeDecoBali">
+    <div class="t"><b data-i="title"></b><span data-i="sub"></span></div>
+    <div class="lang" role="group" aria-label="Idioma">
+      <button data-l="es">ES</button><button data-l="pt">PT</button><button data-l="en">EN</button>
+    </div>
+    <button class="x" aria-label="Cerrar" onclick="parent.postMessage({hdbAi:'close'},'*')">×</button>
+  </header>
+  <div id="log" aria-live="polite"></div>
+  <div class="chips" id="chips"></div>
+  <form id="f">
+    <textarea id="q" rows="1" maxlength="1500" required></textarea>
+    <button id="send" type="submit" data-i="send"></button>
+  </form>
+  <footer data-i="foot"></footer>
+</div>
+<script>
+(function(){
+  var ENDPOINT = 'https://jucubuoftjehwancegma.supabase.co/functions/v1/hdb-ai';
+  var T = {
+    es:{title:'Asistente HomeDecoBali',sub:'Pedidos, productos y envíos',send:'Enviar',ph:'Escribe tu pregunta…',typing:'Escribiendo…',
+      hello:'¡Hola! Soy el asistente de HomeDecoBali. Te ayudo con tu pedido, con nuestros productos hechos a mano en Bali y con envíos o devoluciones. ¿En qué te ayudo?',
+      helloOrder:'¡Hola! Veo que vienes por tu pedido {o}. Para mostrarte su estado, dime el email del pedido o tu nombre y apellido.',
+      chips:['¿Dónde está mi pedido?','¿Cuándo llegan las reservas?','Busco una lámpara colgante','Envíos y devoluciones'],
+      err:'No hay conexión. Inténtalo de nuevo o escríbenos a support@homedecobali.com.',
+      foot:'Asistente automático. Para cambios o devoluciones: <a href="mailto:support@homedecobali.com">support@homedecobali.com</a> · <a href="https://homedecobali.es/policies/privacy-policy" target="_blank" rel="noopener">Privacidad</a>'},
+    pt:{title:'Assistente HomeDecoBali',sub:'Encomendas, produtos e envios',send:'Enviar',ph:'Escreve a tua pergunta…',typing:'A escrever…',
+      hello:'Olá! Sou o assistente da HomeDecoBali. Ajudo-te com a tua encomenda, com os nossos produtos feitos à mão em Bali e com envios ou devoluções. Em que posso ajudar?',
+      helloOrder:'Olá! Vens pela tua encomenda {o}. Para te mostrar o estado, diz-me o email da encomenda ou o teu nome e apelido.',
+      chips:['Onde está a minha encomenda?','Quando chegam as reservas?','Procuro um candeeiro suspenso','Envios e devoluções'],
+      err:'Sem ligação. Tenta novamente ou escreve-nos para support@homedecobali.com.',
+      foot:'Assistente automático. Para alterações ou devoluções: <a href="mailto:support@homedecobali.com">support@homedecobali.com</a> · <a href="https://homedecobali.es/policies/privacy-policy" target="_blank" rel="noopener">Privacidade</a>'},
+    en:{title:'HomeDecoBali Assistant',sub:'Orders, products and shipping',send:'Send',ph:'Type your question…',typing:'Typing…',
+      hello:"Hi! I'm the HomeDecoBali assistant. I can help with your order, our handmade Bali products, and shipping or returns. How can I help?",
+      helloOrder:"Hi! You're here about order {o}. To show its status, tell me the order email or your first and last name.",
+      chips:['Where is my order?','When do preorders arrive?',"I'm looking for a pendant lamp",'Shipping & returns'],
+      err:'No connection. Please try again or email support@homedecobali.com.',
+      foot:'Automated assistant. For changes or returns: <a href="mailto:support@homedecobali.com">support@homedecobali.com</a> · <a href="https://homedecobali.es/policies/privacy-policy" target="_blank" rel="noopener">Privacy</a>'}
+  };
+  var P = new URLSearchParams(location.search);
+  if (P.get('embed')==='1') document.body.classList.add('embed');
+  var nav = (navigator.language||'es').slice(0,2);
+  var lang = ['es','pt','en'].indexOf(P.get('lang'))>=0 ? P.get('lang') : (['es','pt','en'].indexOf(nav)>=0 ? nav : 'es');
+  var order = (P.get('order')||'').replace(/[^#A-Za-z0-9-]/g,'').slice(0,20);
+  function sget(k){try{return sessionStorage.getItem(k)}catch(e){return null}}
+  function sset(k,v){try{sessionStorage.setItem(k,v)}catch(e){}}
+  var sid = sget('hdbai_sid') || (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())+Math.random().toString(16).slice(2));
+  sset('hdbai_sid', sid);
+  var history = []; try{ history = JSON.parse(sget('hdbai_hist')||'[]') }catch(e){ history=[] }
+  var log = document.getElementById('log'), q = document.getElementById('q'), send = document.getElementById('send'), chips = document.getElementById('chips');
+
+  function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+  function md(s){
+    s = esc(s);
+    s = s.replace(/\[([^\]]+)\]\((https:\/\/[^\s)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
+    s = s.replace(/(^|[\s(])(https:\/\/[^\s<)]+)/g,'$1<a href="$2" target="_blank" rel="noopener">$2</a>');
+    s = s.replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>');
+    return s;
+  }
+  function add(role, text){
+    var d = document.createElement('div'); d.className = 'msg '+(role==='user'?'u':'a');
+    d.innerHTML = md(text); log.appendChild(d); log.scrollTop = log.scrollHeight;
+  }
+  function render(){
+    var t = T[lang]; document.documentElement.lang = lang==='pt'?'pt-PT':lang;
+    document.querySelectorAll('[data-i]').forEach(function(el){ var k=el.getAttribute('data-i'); if(k==='foot') el.innerHTML=t[k]; else el.textContent=t[k]; });
+    document.querySelectorAll('[data-l]').forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-l')===lang) });
+    q.placeholder = t.ph;
+    log.innerHTML = '';
+    add('assistant', order ? t.helloOrder.replace('{o}', order) : t.hello);
+    history.forEach(function(m){ add(m.role, m.content) });
+    chips.innerHTML = '';
+    if (!history.length && !order) t.chips.forEach(function(c){ var b=document.createElement('button'); b.type='button'; b.textContent=c; b.onclick=function(){ ask(c) }; chips.appendChild(b) });
+  }
+  document.querySelectorAll('[data-l]').forEach(function(b){ b.onclick=function(){ lang=b.getAttribute('data-l'); render() } });
+
+  function ask(text){
+    text = text.trim(); if(!text) return;
+    chips.innerHTML=''; add('user', text);
+    var outgoing = history.concat([{role:'user', content: (order && !history.length) ? ('[Pedido '+order+'] '+text) : text}]);
+    history.push({role:'user', content:text});
+    send.disabled = true; q.value='';
+    var ty = document.createElement('div'); ty.className='typing'; ty.textContent=T[lang].typing; log.appendChild(ty); log.scrollTop=log.scrollHeight;
+    fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session_id:sid, lang:lang, messages:outgoing.slice(-16)})})
+      .then(function(r){ return r.json() })
+      .then(function(j){ ty.remove(); var a = j.reply || T[lang].err; add('assistant', a); history.push({role:'assistant', content:a}); sset('hdbai_hist', JSON.stringify(history.slice(-16))) })
+      .catch(function(){ ty.remove(); add('assistant', T[lang].err); history.pop() })
+      .then(function(){ send.disabled=false; q.focus() });
+  }
+  document.getElementById('f').onsubmit = function(e){ e.preventDefault(); ask(q.value) };
+  q.addEventListener('keydown', function(e){ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); ask(q.value) } });
+  render();
+})();
+</script>
+</body>
+</html>
