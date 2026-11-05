@@ -4,7 +4,7 @@
 Theme dupliceren (main-theme is via de API geblokkeerd), in de kopie `layout/theme.liquid` vlak vóór `</body>`:
 
 ```liquid
-<script src="https://homedecobali.github.io/hdb-ai/widget.js" data-lang="{{ request.locale.iso_code }}" defer></script>
+<script src="https://homedecobali.ai/widget.js" data-lang="{{ request.locale.iso_code }}" defer></script>
 ```
 Kopie publiceren. Opent een pagina met `?hdb_order=HDB26-1234`, dan gaat de chat direct open met dat ordernummer.
 

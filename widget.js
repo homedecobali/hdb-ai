@@ -1,11 +1,11 @@
 /* HomeDecoBali AI-assistent — chatbubbel voor de Shopify-winkel.
    Gebruik (theme.liquid, vlak voor </body>):
-   <script src="https://homedecobali.github.io/hdb-ai/widget.js" data-lang="{{ request.locale.iso_code }}" defer></script>
+   <script src="https://homedecobali.ai/widget.js" data-lang="{{ request.locale.iso_code }}" defer></script>
 */
 (function () {
   if (window.__hdbAi) return; window.__hdbAi = true;
   var me = document.currentScript || document.querySelector('script[src*="hdb-ai/widget.js"]');
-  var base = (me && me.src) ? me.src.replace(/widget\.js.*$/, '') : 'https://homedecobali.github.io/hdb-ai/';
+  var base = (me && me.src) ? me.src.replace(/widget\.js.*$/, '') : 'https://homedecobali.ai/';
   var raw = ((me && me.getAttribute('data-lang')) || document.documentElement.lang || 'es').toLowerCase();
   var lang = raw.indexOf('pt') === 0 ? 'pt' : raw.indexOf('en') === 0 ? 'en' : 'es';
   var label = { es: 'Pregunta a Dewi', pt: 'Pergunta à Dewi', en: 'Ask Dewi' }[lang];

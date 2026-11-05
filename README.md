@@ -6,7 +6,7 @@ Virtuele assistent die klanten helpt met **lopende orders** (na verificatie) en 
 
 | Onderdeel | Pad | Waar het draait |
 | --- | --- | --- |
-| Chatpagina (test + iframe) | `index.html` | GitHub Pages → `https://homedecobali.github.io/hdb-ai/` (later eigen domein) |
+| Chatpagina (test + iframe) | `index.html` | GitHub Pages → `https://homedecobali.ai/` (CNAME in repo; fallback `homedecobali.github.io/hdb-ai/`) |
 | Winkel-bubbel | `widget.js` | ingeladen in het Shopify-theme |
 | Backend | `supabase/functions/hdb-ai/index.ts` | Supabase Edge Function `hdb-ai` (project `jucubuoftjehwancegma`) |
 | Log + rate-limit | `supabase/migrations/20261105_hdb_ai_assistant_tables.sql` | `hdb_ai_messages` (30 dg), `hdb_ai_events` (2 dg), cron `hdb-ai-retentie` |

@@ -34,6 +34,8 @@ const ALLOWED_ORIGINS = [
   "https://www.homedecobali.pt",
   "https://c62tdp-kr.myshopify.com",
   "https://homedecobali.github.io",
+  "https://homedecobali.ai",
+  "https://www.homedecobali.ai",
 ];
 const DEV_ORIGIN = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/;
 
