@@ -105,9 +105,8 @@ footer a{color:var(--hdb-copper)}
 <script>
 (function(){
   // Backend: Supabase Edge Function (oud) of n8n-webhook HDB · CUSTSERV · Dewi Chat (nieuw).
-  // Testen van de n8n-backend vóór de omschakeling: homedecobali.ai/?api=n8n
-  var EP = { edge: 'https://jucubuoftjehwancegma.supabase.co/functions/v1/hdb-ai', n8n: 'https://homedecobali.app.n8n.cloud/webhook/dewi-chat' };
-  var ENDPOINT = EP[new URLSearchParams(location.search).get('api') === 'n8n' ? 'n8n' : 'edge'];
+  var EP = { n8n: 'https://homedecobali.app.n8n.cloud/webhook/dewi-chat' };
+  var ENDPOINT = EP.n8n; // 06-11: omgezet naar n8n (HDB · CUSTSERV · Dewi Chat); Edge Function hdb-ai is uitgefaseerd
   var T = {
     es:{send:'Enviar',ph:'Escribe tu pregunta a Dewi…',
       hello:'¡Hola! Soy Dewi, del equipo de HomeDecoBali. Estoy aquí para ayudarte con tu pedido, con nuestras piezas hechas a mano en Bali y con envíos o devoluciones. ¿En qué te ayudo?',
