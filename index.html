@@ -137,6 +137,34 @@ footer a{color:var(--hdb-copper)}
   var sid = sget('hdbai_sid') || (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())+Math.random().toString(16).slice(2));
   sset('hdbai_sid', sid);
   var history = []; try{ history = JSON.parse(sget('hdbai_hist')||'[]') }catch(e){ history=[] }
+
+  // ---- Live bezoek (06-11): anonieme statistiek naar Supabase RPC web_track (site 'dewi').
+  // Alleen deze tab-sessie (sessionStorage-id), geen blijvende id, geen IP, geen berichtinhoud.
+  // Uitsluiten van eigen bezoek: ?hdbnotrack=1 (weer aan: ?hdbnotrack=0).
+  var TRK = (function(){
+    var EPT = 'https://jucubuoftjehwancegma.supabase.co/rest/v1/rpc/web_track';
+    var KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1Y3VidW9mdGplaHdhbmNlZ21hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI2OTYwMDIsImV4cCI6MjA5ODI3MjAwMn0.gKYBE76kVv5XdMb-GuFAELdSp5R7OjCIiUzw7hW2Jus';
+    var off = false;
+    try{
+      if (P.get('hdbnotrack')==='1') localStorage.setItem('hdb_nt','1');
+      if (P.get('hdbnotrack')==='0') localStorage.removeItem('hdb_nt');
+      off = localStorage.getItem('hdb_nt')==='1';
+    }catch(e){}
+    if (/bot|crawl|spider|headless|lighthouse|preview/i.test(navigator.userAgent||'')) off = true;
+    function newId(){ return crypto.randomUUID ? crypto.randomUUID() : (Date.now().toString(36)+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2)).slice(0,32) }
+    function post(o){ if(off) return; try{ fetch(EPT,{method:'POST',keepalive:true,headers:{'Content-Type':'application/json',apikey:KEY,Authorization:'Bearer '+KEY},body:JSON.stringify({p:o})}).catch(function(){}) }catch(e){} }
+    var pvid = newId(), act = 0, refh = '';
+    try{ refh = document.referrer ? new URL(document.referrer).hostname : '' }catch(e){}
+    var w = window.innerWidth || 0, tz = null; try{ tz = Intl.DateTimeFormat().resolvedOptions().timeZone }catch(e){}
+    post({t:'pv', site:'dewi', sid:sid, pvid:pvid, path:'/'+(order?'?order':''), title:'Dewi · chat ('+lang+')', pt:'chat',
+      ref:(document.referrer||'').split('?')[0].slice(0,300), refh:refh,
+      us:P.get('utm_source'), um:P.get('utm_medium'), uc:P.get('utm_campaign'), ux:P.get('utm_content'),
+      emb:P.get('embed')==='1', ord:!!order, tz:tz, lang:navigator.language||null,
+      dev: w<768?'mobile':w<1100?'tablet':'desktop'});
+    setInterval(function(){ if(document.visibilityState==='hidden') return; act += 15; post({t:'ping', sid:sid, pvid:pvid, act:act}) }, 15000);
+    document.addEventListener('visibilitychange', function(){ if(document.visibilityState!=='hidden') post({t:'ping', sid:sid, pvid:pvid, act:act}) });
+    return { ev:function(k,l){ post({t:'ev', sid:sid, k:k, l:l||null}) } };
+  })();
   var log=document.getElementById('log'), q=document.getElementById('q'), send=document.getElementById('send'), chips=document.getElementById('chips');
   var dewi=document.getElementById('dewi'), mouth=document.getElementById('mouth'), intro=document.getElementById('intro'), caret=document.getElementById('caret');
 
@@ -213,11 +241,11 @@ footer a{color:var(--hdb-copper)}
     // even wachten tot de stuiter-binnenkomst bijna klaar is
     setTimeout(function(){ speak(intro, hi, showChips) }, first && !reduce ? 900 : 0);
   }
-  document.querySelectorAll('[data-l]').forEach(function(b){ b.onclick=function(){ if(lang===b.getAttribute('data-l')) return; lang=b.getAttribute('data-l'); render(false) } });
+  document.querySelectorAll('[data-l]').forEach(function(b){ b.onclick=function(){ if(lang===b.getAttribute('data-l')) return; lang=b.getAttribute('data-l'); TRK.ev('chat_lang', lang); render(false) } });
 
   function ask(text){
     text=text.trim(); if(!text) return;
-    chips.innerHTML=''; addUser(text);
+    chips.innerHTML=''; addUser(text); TRK.ev('chat_msg', lang);
     var outgoing = history.concat([{role:'user', content:(order && !history.length) ? ('[Pedido '+order+'] '+text) : text}]);
     history.push({role:'user', content:text});
     send.disabled=true; q.value='';
