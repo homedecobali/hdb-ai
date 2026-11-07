@@ -108,6 +108,7 @@ body.staff .chips button.alt{background:var(--hdb-white)}
 .lbl .a span,.lbl .p span{white-space:pre;line-height:1.12;display:block}
 .lbl .a span{font-weight:bold}
 .lbl img{position:absolute;left:66.01mm;top:3.28mm;width:21.04mm;height:29.88mm;object-fit:contain}
+.lbl svg.bc{position:absolute;left:5.68mm;top:27mm;height:6.1mm;shape-rendering:crispEdges}
 </style>
 </head>
 <body>
@@ -382,9 +383,34 @@ body.staff .chips button.alt{background:var(--hdb-white)}
 
   // ---- etiket opmaken (gedeeld door voorbeeld en print)
   function escH(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') }
+  // Code 128 (B, met C voor cijferreeksen) als SVG; module 0,254 mm = 3 dots op 300 dpi (DYMO 450 Turbo)
+  var C128 = '212222 222122 222221 121223 121322 131222 122213 122312 132212 221213 221312 231212 112232 122132 122231 113222 123122 123221 223211 221132 221231 213212 223112 312131 311222 321122 321221 312212 322112 322211 212123 212321 232121 111323 131123 131321 112313 132113 132311 211313 231113 231311 112133 112331 132131 113123 113321 133121 313121 211331 231131 213113 213311 213131 311123 311321 331121 312113 312311 332111 314111 221411 431111 111224 111422 121124 121421 141122 141221 112214 112412 122114 122411 142112 142211 241211 221114 413111 241112 134111 111242 121142 121241 114212 124112 124211 411212 421112 421211 212141 214121 412121 111143 111341 131141 114113 114311 411113 411311 113141 114131 311141 411131 211412 211214 211232 2331112'.split(' ');
+  function code128(txt){
+    var s = String(txt).replace(/[^\x20-\x7e]/g,''), codes = [], i = 0, set = null;
+    function digitsAt(k){ var n = 0; while (k + n < s.length && /\d/.test(s[k + n])) n++; return n; }
+    while (i < s.length){
+      var n = digitsAt(i);
+      if (n >= 4 && (i === 0 || i + n === s.length || n >= 6)){
+        var pairs = Math.floor(n / 2);
+        if (set === null && n % 2 === 0) { codes.push(105); set = 'C'; }
+        else if (set === null) { codes.push(104, s.charCodeAt(i) - 32); set = 'B'; i++; continue; }
+        else if (set !== 'C') { codes.push(99); set = 'C'; }
+        for (var p = 0; p < pairs; p++) { codes.push(+s.substr(i, 2)); i += 2; }
+        continue;
+      }
+      if (set === null) { codes.push(104); set = 'B'; } else if (set !== 'B') { codes.push(100); set = 'B'; }
+      codes.push(s.charCodeAt(i) - 32); i++;
+    }
+    var sum = codes[0]; for (var k = 1; k < codes.length; k++) sum += codes[k] * k;
+    codes.push(sum % 103, 106);
+    var x = 0, rects = '';
+    codes.forEach(function(c){ var pat = C128[c]; for (var j = 0; j < pat.length; j++){ var w = +pat[j]; if (j % 2 === 0) rects += '<rect x="'+x+'" y="0" width="'+w+'" height="1"/>'; x += w; } });
+    var mod = Math.min(0.254, 58 / x);
+    return '<svg class="bc" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+x+' 1" preserveAspectRatio="none" style="width:'+(x*mod).toFixed(3)+'mm">'+rects+'</svg>';
+  }
   function labelHTML(l){
     return '<div class="lbl"><div class="a"><span>'+escH(l.sku)+'\n'+escH(l.name)+'</span></div>'
-      + '<div class="p"><span>'+escH(l.price_text)+'</span></div><img src="'+LOGO+'" alt=""></div>';
+      + '<div class="p"><span>'+escH(l.price_text)+'</span></div>' + (l.sku ? code128(l.sku) : '') + '<img src="'+LOGO+'" alt=""></div>';
   }
   // DYMO "ShrinkToFit": grootste lettergrootte (max 72pt) waarbij de tekst in het vak past
   function fitAll(root){
