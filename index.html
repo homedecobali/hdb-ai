@@ -73,6 +73,41 @@ form button:disabled{opacity:.5;cursor:default}
 footer{font-size:11px;color:var(--hdb-text);text-align:center;padding:0 16px 10px;opacity:.8}
 footer a{color:var(--hdb-copper)}
 @media (prefers-reduced-motion:reduce){.dewi.bounce,.dewi.talking .head,.blink,.caret{animation:none}}
+
+/* medewerkermodus (07-11) */
+.bar .who{display:none;align-items:center;gap:8px;margin-left:auto;font-size:12px}
+.bar .who button{background:none;border:1px solid var(--hdb-copper);color:var(--hdb-footer-text);font:inherit;font-size:12px;padding:3px 8px;border-radius:4px;cursor:pointer}
+body.staff .bar .lang{display:none}
+body.staff .bar .who{display:flex}
+body.staff .chips{border-top:1px solid var(--hdb-border);padding-top:10px}
+body.staff .chips button.alt{background:var(--hdb-white)}
+.msg.job{white-space:normal;max-width:100%;width:100%;padding:12px}
+.job h4{margin:0 0 6px;font-weight:normal;color:var(--hdb-brand);font-size:15px}
+.job .meta{font-size:12px;opacity:.85;margin-bottom:8px}
+.job .tbl{max-height:260px;overflow:auto;border:1px solid var(--hdb-border);border-radius:6px;background:var(--hdb-cream)}
+.job table{border-collapse:collapse;width:100%;font-size:13px}
+.job th,.job td{padding:5px 8px;border-bottom:1px solid var(--hdb-border);text-align:left;vertical-align:middle}
+.job th{position:sticky;top:0;background:var(--hdb-soft);font-weight:normal;color:var(--hdb-brand)}
+.job td.n{white-space:nowrap}
+.job td s{opacity:.55;font-size:11px;margin-right:4px}
+.job input[type=number]{width:52px;font:inherit;font-size:13px;padding:2px 4px;border:1px solid var(--hdb-border);border-radius:4px}
+.job .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}
+.job .acts button{background:var(--hdb-copper);color:var(--hdb-white);border:0;border-radius:8px;padding:8px 16px;font:inherit;font-size:14px;cursor:pointer}
+.job .acts button.sec{background:var(--hdb-soft);color:var(--hdb-brand);border:1px solid var(--hdb-border)}
+.job .acts button:disabled{opacity:.5;cursor:default}
+.job .note{font-size:12px;margin-top:6px;opacity:.85}
+.prev{margin:10px 0 4px;display:flex;gap:10px;flex-wrap:wrap}
+.prev .lblwrap{width:89mm;height:36mm;transform:scale(.8);transform-origin:0 0;margin:0 -17.8mm -7.2mm 0;box-shadow:0 1px 4px rgba(59,47,36,.25);border-radius:2mm;background:#fff;overflow:hidden}
+.help ol{margin:6px 0 0 18px;padding:0}
+.help li{margin:3px 0}
+.help code{background:var(--hdb-soft);padding:1px 4px;border-radius:3px;font-size:12px;word-break:break-all}
+/* etiket 30321 (89 x 36 mm), maten 1-op-1 uit het DYMO-sjabloon Etiket1.label */
+.lbl{position:relative;width:89mm;height:36mm;overflow:hidden;background:#fff;color:#000;font-family:Arial,Helvetica,sans-serif}
+.lbl .a{position:absolute;left:5.68mm;top:4.41mm;width:59.36mm;height:12.45mm;display:flex;align-items:center;overflow:hidden}
+.lbl .p{position:absolute;left:5.68mm;top:22.07mm;width:21.59mm;height:3.81mm;display:flex;align-items:flex-start;overflow:hidden}
+.lbl .a span,.lbl .p span{white-space:pre;line-height:1.12;display:block}
+.lbl .a span{font-weight:bold}
+.lbl img{position:absolute;left:66.01mm;top:3.28mm;width:21.04mm;height:29.88mm;object-fit:contain}
 </style>
 </head>
 <body>
@@ -82,6 +117,7 @@ footer a{color:var(--hdb-copper)}
     <div class="lang" role="group" aria-label="Idioma">
       <button data-l="es" title="Español" aria-label="Español"><svg viewBox="0 0 30 20" width="24" height="16" aria-hidden="true"><rect width="30" height="20" fill="#AA151B"/><rect y="5" width="30" height="10" fill="#F1BF00"/></svg></button><button data-l="pt" title="Português" aria-label="Português"><svg viewBox="0 0 30 20" width="24" height="16" aria-hidden="true"><rect width="30" height="20" fill="#FF0000"/><rect width="12" height="20" fill="#006600"/><circle cx="12" cy="10" r="4" fill="#FFCC00"/><circle cx="12" cy="10" r="2.6" fill="#FF0000"/><circle cx="12" cy="10" r="1.8" fill="#fff"/></svg></button><button data-l="en" title="English" aria-label="English"><svg viewBox="0 0 60 40" width="24" height="16" aria-hidden="true"><clipPath id="uk"><rect width="60" height="40"/></clipPath><g clip-path="url(#uk)"><rect width="60" height="40" fill="#012169"/><path d="M0,0 60,40M60,0 0,40" stroke="#fff" stroke-width="8"/><path d="M0,0 60,40M60,0 0,40" stroke="#C8102E" stroke-width="3"/><path d="M30,0v40M0,20h60" stroke="#fff" stroke-width="12"/><path d="M30,0v40M0,20h60" stroke="#C8102E" stroke-width="7"/></g></svg></button>
     </div>
+    <div class="who"><span id="who"></span><button type="button" id="logout">Uitloggen</button></div>
     <button class="x" aria-label="Cerrar" onclick="parent.postMessage({hdbAi:'close'},'*')">×</button>
   </div>
   <div class="hero">
@@ -226,7 +262,217 @@ footer a{color:var(--hdb-copper)}
     log.appendChild(r); log.scrollTop=log.scrollHeight; return r;
   }
 
+  // =====================================================================
+  // Medewerkermodus (07-11): "ik ben <naam> ... code <cijfers>" -> login via n8n
+  // HDB · CUSTSERV · Dewi Etiketten (webhook dewi-staff). De code gaat nooit naar
+  // de klantchat of naar Claude. Etiketten worden hier in de browser opgemaakt
+  // (89 x 36 mm, DYMO 30321) en via het gewone afdrukvenster geprint.
+  // =====================================================================
+  var STAFF_EP = 'https://homedecobali.app.n8n.cloud/webhook/dewi-staff';
+  var LOGO = 'assets/etiket-logo.png';
+  function jget(k){ try{ return JSON.parse(sget(k)||'null') }catch(e){ return null } }
+  function sdel(k){ try{ sessionStorage.removeItem(k) }catch(e){} }
+  var staff = jget('hdbai_staff');
+  if (staff && (!staff.token || !staff.expires_at || new Date(staff.expires_at) <= new Date())) { staff = null; sdel('hdbai_staff'); }
+  var staffHist = jget('hdbai_shist') || [];
+  var lastJob = jget('hdbai_job');
+  var NL = {
+    hello: 'Hoi {n}! Je bent ingelogd als medewerker. Ik zet etiketten voor de DYMO klaar: per SKU, meerdere SKU\'s, een SKU-reeks of een hele categorie, met of zonder prijsaanpassing. Wat wil je printen?',
+    menu: [
+      ['Etiket per SKU', 'Print een etiket voor SKU '],
+      ['Meerdere SKU\'s', 'Print etiketten voor deze SKU\'s: '],
+      ['Per categorie', 'Print etiketten voor alle producten in de categorie '],
+      ['SKU-reeks', 'Print etiketten voor alle SKU\'s die beginnen met '],
+      ['Prijzen verhogen', 'Maak dezelfde lijst opnieuw maar verhoog de prijzen met 10% en rond af op ,95'],
+      ['Testetiket', '#test'],
+      ['Printer instellen', '#help']
+    ],
+    help: '**Printen met de DYMO LabelWriter 450 Turbo**\n1. Klik onder een printlijst op **Printen**. Het afdrukvenster van de browser opent.\n2. Kies als printer de **DYMO LabelWriter 450 Turbo**.\n3. Bij *Meer instellingen*: papierformaat **30321 Large Address** (89 × 36 mm), marges **Geen**, schaal **100%**, kop- en voetteksten **uit**.\n4. Klik op Afdrukken. De browser onthoudt deze keuze voor de volgende keer.\n\nAlleen het gewone printerstuurprogramma van de DYMO is nodig, geen DYMO-labelsoftware. Druk eerst één **Testetiket** af om te controleren of alles goed op het etiket valt.\n\n**Zonder afdrukvenster (optioneel)**: zet de DYMO als standaardprinter met 30321 als standaardpapier en open Dewi via een snelkoppeling naar Chrome of Edge met de toevoeging --kiosk-printing achter het programmapad, gevolgd door https://homedecobali.ai/. Dan gaat Printen meteen naar de DYMO.'
+  };
+  function nlHello(){ return NL.hello.replace('{n}', staff ? staff.display_name : '') }
+  function matchLogin(text){
+    var a = text.match(/\bik\s+ben\s+([a-zà-ÿ]{2,20})\b/i);
+    var b = text.match(/\b(?:toegangs|pin)?code\b\D{0,15}(\d{4,8})\b/i);
+    return (a && b) ? { name: a[1].toLowerCase(), code: b[1] } : null;
+  }
+  function saveStaff(){
+    sset('hdbai_shist', JSON.stringify(staffHist.slice(-16)));
+    if (lastJob) sset('hdbai_job', JSON.stringify(lastJob)); else sdel('hdbai_job');
+  }
+  function post(url, body){
+    return fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+      .then(function(r){ return r.json().catch(function(){ return {} }).then(function(j){ j._status = r.status; return j }) });
+  }
+  function staffLogin(m, original){
+    chips.innerHTML=''; addUser(original.replace(/\d{4,8}/g,'••••'));
+    send.disabled=true; q.value='';
+    var dots=addDots();
+    post(STAFF_EP,{action:'login', name:m.name, code:m.code})
+      .then(function(j){
+        dots.remove();
+        if (j.ok && j.staff && j.staff.token){
+          staff = j.staff; sset('hdbai_staff', JSON.stringify(staff));
+          try{ localStorage.setItem('hdb_nt','1') }catch(e){}
+          staffHist = []; lastJob = null; saveStaff();
+          enterStaff(true);
+        } else addDewi(j.reply || 'Inloggen lukte niet. Probeer het opnieuw.', true);
+      })
+      .catch(function(){ dots.remove(); addDewi('Geen verbinding. Probeer het opnieuw.', true) })
+      .then(function(){ send.disabled=false; q.focus() });
+  }
+  function leaveStaff(msg){
+    var tok = staff && staff.token;
+    staff = null; staffHist = []; lastJob = null;
+    sdel('hdbai_staff'); sdel('hdbai_shist'); sdel('hdbai_job');
+    document.body.classList.remove('staff');
+    if (tok) post(STAFF_EP,{action:'logout', token:tok}).catch(function(){});
+    render(false);
+    if (msg) addDewi(msg, true);
+  }
+  document.getElementById('logout').onclick = function(){ leaveStaff() };
+
+  function staffChips(){
+    chips.innerHTML='';
+    NL.menu.forEach(function(c){
+      var b=document.createElement('button'); b.type='button'; b.textContent=c[0];
+      if (c[1].charAt(0)==='#') b.className='alt';
+      b.onclick=function(){
+        if (c[1]==='#test') return printLabels([{ sku:'TEST0001', name:'DEWI TESTETIKET', price_text:'EURO 0,00', copies:1 }], b);
+        if (c[1]==='#help') { var m=addDewi(NL.help,false); m.classList.add('help'); return; }
+        if (/\s$/.test(c[1])) { q.value=c[1]; q.focus(); q.setSelectionRange(q.value.length,q.value.length); }
+        else ask(c[1]);
+      };
+      chips.appendChild(b);
+    });
+  }
+  function enterStaff(first){
+    document.body.classList.add('staff');
+    document.documentElement.lang='nl';
+    document.getElementById('who').textContent = 'Medewerker · ' + staff.display_name;
+    q.placeholder = 'Bijv. "print etiketten voor DE26020234 en DE26020002" of "alle lampen +10%"';
+    send.textContent = 'Stuur';
+    document.querySelector('footer').innerHTML = 'Medewerkermodus · etiketten 89 × 36 mm (DYMO 30321) · prijsaanpassingen gelden alleen op het etiket';
+    log.innerHTML='';
+    staffHist.forEach(function(m){ m.role==='user' ? addUser(m.content) : addDewi(m.content,false) });
+    if (lastJob) addJob(lastJob);
+    staffChips();
+    caret.style.display='';
+    var hi = nlHello();
+    if (first && staffHist.length){ intro.innerHTML=md(hi); caret.style.display='none'; return; }
+    intro.textContent='';
+    speak(intro, hi, function(){ caret.style.display='none' });
+  }
+  function askStaff(text){
+    addUser(text);
+    staffHist.push({role:'user', content:text});
+    send.disabled=true; q.value='';
+    var dots=addDots();
+    post(STAFF_EP,{action:'chat', token:staff.token, messages:staffHist.slice(-16), last_selection: lastJob ? lastJob.selection : null})
+      .then(function(j){
+        dots.remove();
+        if (j._status===401 || j.error==='session'){ leaveStaff('Je medewerkersessie is verlopen. Log opnieuw in met je naam en code.'); return; }
+        var a = j.reply || 'Er ging iets mis. Probeer het nog eens.';
+        addDewi(a,true); staffHist.push({role:'assistant', content:a});
+        if (j.print_job){ lastJob = j.print_job; addJob(lastJob); }
+        saveStaff();
+      })
+      .catch(function(){ dots.remove(); addDewi('Geen verbinding. Probeer het opnieuw.',true); staffHist.pop() })
+      .then(function(){ send.disabled=false; q.focus() });
+  }
+
+  // ---- etiket opmaken (gedeeld door voorbeeld en print)
+  function escH(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') }
+  function labelHTML(l){
+    return '<div class="lbl"><div class="a"><span>'+escH(l.sku)+'\n'+escH(l.name)+'</span></div>'
+      + '<div class="p"><span>'+escH(l.price_text)+'</span></div><img src="'+LOGO+'" alt=""></div>';
+  }
+  // DYMO "ShrinkToFit": grootste lettergrootte (max 72pt) waarbij de tekst in het vak past
+  function fitAll(root){
+    root.querySelectorAll('.lbl .a, .lbl .p').forEach(function(box){
+      var sp = box.firstChild, lo = 4, hi = 72;
+      while (hi - lo > 0.25){
+        var mid = (lo + hi) / 2; sp.style.fontSize = mid + 'pt';
+        if (sp.offsetWidth <= box.clientWidth && sp.offsetHeight <= box.clientHeight) lo = mid; else hi = mid;
+      }
+      sp.style.fontSize = lo + 'pt';
+    });
+  }
+  var printing = false;
+  function printLabels(labels, btn){
+    if (printing) return; printing = true; if (btn) btn.disabled = true;
+    var pages = [];
+    labels.forEach(function(l){ for (var i = 0; i < (l.copies || 0); i++) pages.push(labelHTML(l)); });
+    if (!pages.length){ printing=false; if(btn) btn.disabled=false; return; }
+    var css = Array.prototype.map.call(document.querySelectorAll('style'), function(s){ return s.textContent }).join('\n')
+      .split('\n').filter(function(x){ return /^\.lbl/.test(x.trim()) }).join('\n');
+    var doc = '<!doctype html><html><head><meta charset="utf-8"><base href="'+escH(location.href)+'"><style>'
+      + '@page{size:89mm 36mm;margin:0}html,body{margin:0;padding:0;background:#fff}'
+      + '.lbl{page-break-after:always;break-after:page}.lbl:last-child{page-break-after:auto;break-after:auto}'
+      + '*{-webkit-print-color-adjust:exact;print-color-adjust:exact}' + css + '</style></head><body>' + pages.join('') + '</body></html>';
+    var fr = document.createElement('iframe');
+    fr.setAttribute('aria-hidden','true');
+    fr.style.cssText = 'position:fixed;right:0;bottom:0;width:89mm;height:36mm;border:0;opacity:0;pointer-events:none';
+    document.body.appendChild(fr);
+    var done = function(){ printing=false; if(btn) btn.disabled=false; setTimeout(function(){ fr.remove() }, 1000) };
+    fr.onload = function(){
+      var d = fr.contentDocument, w = fr.contentWindow;
+      var imgs = Array.prototype.slice.call(d.images);
+      Promise.all(imgs.map(function(im){ return im.decode ? im.decode().catch(function(){}) : Promise.resolve() }))
+        .then(function(){ return d.fonts && d.fonts.ready ? d.fonts.ready : null })
+        .then(function(){
+          fitAll(d);
+          w.addEventListener('afterprint', done);
+          w.focus(); w.print();
+          setTimeout(function(){ if (printing) done() }, 60000);
+        });
+    };
+    fr.srcdoc = doc;
+  }
+
+  // ---- printlijst-kaart in het gesprek
+  function addJob(job){
+    var r=document.createElement('div'); r.className='row a';
+    var m=document.createElement('div'); m.className='msg job';
+    var pc = job.selection && job.selection.price_change;
+    var rows = job.labels.map(function(l,i){
+      var changed = Math.abs((l.base_price||0) - l.price) > 0.001;
+      return '<tr><td class="n">'+escH(l.sku)+'</td><td>'+escH(l.name)+'</td><td class="n">'
+        + (changed ? '<s>'+escH(String(l.base_price).replace('.',','))+'</s>' : '') + escH(l.price_text.replace('EURO ',''))
+        + '</td><td class="n"><input type="number" min="0" max="50" value="'+l.copies+'" data-i="'+i+'" aria-label="Aantal"></td></tr>';
+    }).join('');
+    m.innerHTML = '<h4>Printlijst · <span class="tot"></span></h4>'
+      + '<div class="meta">' + escH(job.by || '') + ' · ' + new Date(job.created_at).toLocaleString('nl-NL')
+      + (pc ? ' · prijs ' + (pc.mode==='percent' ? (pc.value>0?'+':'')+pc.value+'%' : pc.mode==='amount' ? (pc.value>0?'+':'')+'€'+pc.value : 'vast €'+pc.value) + (job.selection.rounding && job.selection.rounding!=='none' ? ', afgerond ' + ({whole:'op hele euro',95:'op ,95',99:'op ,99',50:'op ,50/,00'}[job.selection.rounding] || '') : '') + ' (alleen op etiket)' : '')
+      + '</div>'
+      + '<div class="prev"></div>'
+      + '<div class="tbl"><table><thead><tr><th>SKU</th><th>Naam op etiket</th><th>Prijs</th><th>Aantal</th></tr></thead><tbody>'+rows+'</tbody></table></div>'
+      + '<div class="acts"><button type="button" class="go">Printen</button><button type="button" class="sec one">Eerste etiket printen</button></div>'
+      + (job.not_found && job.not_found.length ? '<div class="note">Niet gevonden: '+escH(job.not_found.join(', '))+'</div>' : '')
+      + (job.truncated ? '<div class="note">Afgekapt op 500 etiketten; splits de opdracht op.</div>' : '');
+    r.appendChild(m); log.appendChild(r);
+    var tot = m.querySelector('.tot'), go = m.querySelector('.go');
+    function upd(){
+      var n = job.labels.reduce(function(a,l){ return a + (l.copies||0) }, 0);
+      tot.textContent = job.labels.length + ' etiket' + (job.labels.length===1?'':'ten') + ', ' + n + ' stuks';
+      go.textContent = 'Printen (' + n + ')'; go.disabled = !n;
+    }
+    m.querySelectorAll('input[type=number]').forEach(function(inp){
+      inp.oninput = function(){ var v = Math.max(0, Math.min(50, parseInt(inp.value,10)||0)); job.labels[+inp.getAttribute('data-i')].copies = v; upd(); saveStaff(); };
+    });
+    go.onclick = function(){ printLabels(job.labels, go) };
+    m.querySelector('.one').onclick = function(){ var l = job.labels[0]; printLabels([{ sku:l.sku, name:l.name, price_text:l.price_text, copies:1 }], this) };
+    var pv = m.querySelector('.prev');
+    job.labels.slice(0,2).forEach(function(l){ var w=document.createElement('div'); w.className='lblwrap'; w.innerHTML=labelHTML(l); pv.appendChild(w) });
+    var im = pv.querySelector('img');
+    var fit = function(){ fitAll(pv) };
+    if (im && !im.complete) im.onload = fit;
+    fit();
+    upd();
+    log.scrollTop = log.scrollHeight;
+  }
+
   function render(first){
+    if (staff) return enterStaff(first);
     var t=T[lang]; document.documentElement.lang = lang==='pt'?'pt-PT':lang;
     document.querySelectorAll('[data-i]').forEach(function(el){ var k=el.getAttribute('data-i'); if(k==='foot') el.innerHTML=t[k]; else el.textContent=t[k]; });
     document.querySelectorAll('[data-l]').forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-l')===lang) });
@@ -245,6 +491,9 @@ footer a{color:var(--hdb-copper)}
 
   function ask(text){
     text=text.trim(); if(!text) return;
+    if (staff) return askStaff(text);
+    var lm = matchLogin(text);
+    if (lm) return staffLogin(lm, text);
     chips.innerHTML=''; addUser(text); TRK.ev('chat_msg', lang);
     var outgoing = history.concat([{role:'user', content:(order && !history.length) ? ('[Pedido '+order+'] '+text) : text}]);
     history.push({role:'user', content:text});

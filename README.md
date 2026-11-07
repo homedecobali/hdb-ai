@@ -40,5 +40,22 @@ Kan niet: wijzigen, annuleren, terugbetalen, adres aanpassen, kortingen. Verwijs
 2. Open `https://homedecobali.github.io/hdb-ai/` (taal: `?lang=pt`, order-voorinvulling: `?order=HDB26-1837`).
 3. Testvragen: "¿Dónde está mi pedido #HDB26-xxxx?" + e-mail · "Busco una cesta grande" · "¿Enviáis a Baleares?".
 
+## Medewerkermodus: prijsetiketten (07-11-2026)
+Een medewerker typt op homedecobali.ai: *"ik ben marco en mijn code is 1234"*. De pagina herkent dit zelf (Nederlands "ik ben …" + "code …") en stuurt het **niet** naar de klantchat of Claude, maar naar n8n **HDB · CUSTSERV · Dewi Etiketten** (`POST /webhook/dewi-staff`, workflow `6RMIOFJaNiFr47AJ`).
+
+| Onderdeel | Waar |
+| --- | --- |
+| Medewerkers + codes (bcrypt) | Supabase `hdb_ai_staff`; sessies (sha256-token, 10 uur) `hdb_ai_staff_sessions` |
+| Login / check / logout | RPC `hdb_ai_staff_login` (max 5 fout per uur per IP en per naam), `hdb_ai_staff_check`, `hdb_ai_staff_logout` |
+| Medewerker toevoegen / code wijzigen | `select public.hdb_ai_staff_set('<naam>', '<Weergavenaam>', '<code>');` (oude sessies verlopen direct) |
+| Vaste etiketnaam per SKU | `hdb_ai_label_names` (via Dewi: "noem DE… voortaan …") |
+| Migratie | `supabase/migrations/20261107_hdb_ai_staff_labels.sql` |
+
+Na inloggen praat Dewi Nederlands en zet ze **printlijsten** klaar: per SKU, meerdere SKU's, SKU-reeks (prefix), categorie of zoekwoord; aantal 1 / vast / gelijk aan voorraad; prijs +/- % of bedrag of vaste prijs, afronden (hele euro, ,95, ,99, ,50). Prijzen, SKU en voorraad komen live uit Shopify; **prijsaanpassingen gelden alleen op het etiket**.
+
+**Etiketnaam** = producttype + modelnaam uit de Spaanse titel (bijv. *Escultura … Modelo Kanawa* → `ESCULTURA KANAWA`), tenzij er een vaste naam is opgeslagen.
+
+**Printen** gebeurt in de browser van de medewerker, zonder DYMO-software: de pagina maakt per stuk een pagina van 89 × 36 mm (DYMO 30321 Large Address), opgemaakt 1-op-1 naar het DYMO-sjabloon `Etiket1.label` (SKU + naam vet, prijs `EURO 149,00`, logo `assets/etiket-logo.png`), en opent het afdrukvenster. Eenmalig kiezen: printer DYMO LabelWriter 450 Turbo, papier 30321, marges Geen, schaal 100%. Zonder afdrukvenster: DYMO als standaardprinter + Chrome/Edge-snelkoppeling met `--kiosk-printing`.
+
 ## Live zetten (na test)
 Zie `docs/shopify-integratie.md` — widget in het theme, link in orderbevestiging/verzendmails.
