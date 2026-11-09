@@ -55,7 +55,7 @@ Na inloggen praat Dewi Nederlands en zet ze **printlijsten** klaar: per SKU, mee
 
 **Etiketnaam** = producttype + modelnaam uit de Spaanse titel (bijv. *Escultura … Modelo Kanawa* → `ESCULTURA KANAWA`), tenzij er een vaste naam is opgeslagen.
 
-**Printen** gebeurt in de browser van de medewerker, zonder DYMO-software: de pagina maakt per stuk een pagina van 89 × 36 mm (DYMO 30321 Large Address), opgemaakt 1-op-1 naar het DYMO-sjabloon `Etiket1.label` (SKU + naam vet, prijs `EURO 149,00`, daaronder links de **SKU als Code 128-barcode** (module 0,254 mm = 3 dots op 300 dpi, 6,1 mm hoog), logo `assets/etiket-logo.png`), en opent het afdrukvenster. Eenmalig kiezen: printer DYMO LabelWriter 450 Turbo, papier 30321, marges Geen, schaal 100%. Zonder afdrukvenster: DYMO als standaardprinter + Chrome/Edge-snelkoppeling met `--kiosk-printing`.
+**Printen** gebeurt in de browser van de medewerker, zonder DYMO-software: de pagina maakt per stuk een pagina van 89 × 36 mm (DYMO 30321 Large Address), opgemaakt 1-op-1 naar het DYMO-sjabloon `Etiket1.label` (SKU + naam vet, prijs `EURO 149,00`, daaronder links de **SKU als Code 128-barcode** (zo breed als past: 6 tot 3 hele printer-dots per streep op 300 dpi, max 58 mm breed, 7 mm hoog), logo `assets/etiket-logo.png`), en opent het afdrukvenster. Eenmalig kiezen: printer DYMO LabelWriter 450 Turbo, papier 30321, marges Geen, schaal 100%. Zonder afdrukvenster: DYMO als standaardprinter + Chrome/Edge-snelkoppeling met `--kiosk-printing`.
 
 ## Live zetten (na test)
 Zie `docs/shopify-integratie.md` — widget in het theme, link in orderbevestiging/verzendmails.
