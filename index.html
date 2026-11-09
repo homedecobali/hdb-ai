@@ -288,7 +288,7 @@ body.staff .chips button.alt{background:var(--hdb-white)}
       ['Testetiket', '#test'],
       ['Printer instellen', '#help']
     ],
-    help: '**Printen met de DYMO LabelWriter 450 Turbo**\n1. Klik onder een printlijst op **Printen**. Het afdrukvenster van de browser opent.\n2. Kies als printer de **DYMO LabelWriter 450 Turbo**.\n3. Bij *Meer instellingen*: papierformaat **30321 Large Address** (89 × 36 mm), marges **Geen**, schaal **100%**, kop- en voetteksten **uit**.\n4. Klik op Afdrukken. De browser onthoudt deze keuze voor de volgende keer.\n\nAlleen het gewone printerstuurprogramma van de DYMO is nodig, geen DYMO-labelsoftware. Druk eerst één **Testetiket** af om te controleren of alles goed op het etiket valt.\n\n**Zonder afdrukvenster (optioneel)**: zet de DYMO als standaardprinter met 30321 als standaardpapier en open Dewi via een snelkoppeling naar Chrome of Edge met de toevoeging --kiosk-printing achter het programmapad, gevolgd door https://homedecobali.ai/. Dan gaat Printen meteen naar de DYMO.'
+    help: '**Printen met de DYMO LabelWriter 450 Turbo**\n1. Klik onder een printlijst op **Printen**. Het afdrukvenster van de browser opent.\n2. Kies als printer de **DYMO LabelWriter 450 Turbo**.\n3. Bij *Meer instellingen*: papierformaat **30321 Large Address**, marges **Geen** (belangrijk, anders komt er een leeg etiket mee), schaal **100%**, kop- en voetteksten **uit**.\n4. Klik op Afdrukken. De browser onthoudt deze keuze voor de volgende keer.\n\nAlleen het gewone printerstuurprogramma van de DYMO is nodig, geen DYMO-labelsoftware. Druk eerst één **Testetiket** af om te controleren of alles goed op het etiket valt.\n\n**Zonder afdrukvenster (optioneel)**: zet de DYMO als standaardprinter met 30321 als standaardpapier en open Dewi via een snelkoppeling naar Chrome of Edge met de toevoeging --kiosk-printing achter het programmapad, gevolgd door https://homedecobali.ai/. Dan gaat Printen meteen naar de DYMO.'
   };
   function nlHello(){ return NL.hello.replace('{n}', staff ? staff.display_name : '') }
   function matchLogin(text){
@@ -435,9 +435,10 @@ body.staff .chips button.alt{background:var(--hdb-white)}
     var css = Array.prototype.map.call(document.querySelectorAll('style'), function(s){ return s.textContent }).join('\n')
       .split('\n').filter(function(x){ return /^\.lbl/.test(x.trim()) }).join('\n');
     var doc = '<!doctype html><html><head><meta charset="utf-8"><base href="'+escH(location.href)+'"><style>'
-      + '@page{size:89mm 36mm;margin:0}html,body{margin:0;padding:0;background:#fff}'
-      + '.lbl{page-break-after:always;break-after:page}.lbl:last-child{page-break-after:auto;break-after:auto}'
-      + '*{-webkit-print-color-adjust:exact;print-color-adjust:exact}' + css + '</style></head><body>' + pages.join('') + '</body></html>';
+      + '@page{size:88.9mm 35.56mm;margin:0}html,body{margin:0;padding:0;background:#fff;height:auto}'
+      + css + '.lbl{height:33.8mm;page-break-inside:avoid;break-inside:avoid;page-break-after:always;break-after:page}'
+      + '.lbl:last-child{page-break-after:auto;break-after:auto}'
+      + '*{-webkit-print-color-adjust:exact;print-color-adjust:exact}</style></head><body>' + pages.join('') + '</body></html>';
     var fr = document.createElement('iframe');
     fr.setAttribute('aria-hidden','true');
     fr.style.cssText = 'position:fixed;right:0;bottom:0;width:89mm;height:36mm;border:0;opacity:0;pointer-events:none';
